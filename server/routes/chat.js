@@ -3,7 +3,9 @@ import { isAuthenticated } from "../middlewares/auth.js";
 import { searchUser } from "../controllers/user.js";
 import { errorMiddleware } from "../middlewares/error.js";
 
-import { addMembers, getMyChats, getMyGroups, leaveGroup, newGroupChat, removeMember } from "../controllers/chat.js";
+import { addMembers, getMyChats, getMyGroups, leaveGroup,
+     newGroupChat, removeMember, sendAttachments } from "../controllers/chat.js";
+import { attachmentsMulter } from "../middlewares/multer.js";
 const app = express.Router();
 
 app.use(isAuthenticated);
@@ -17,6 +19,7 @@ app.put('/removemember',removeMember);           //fetch logged in user chat
 
 //dynamic routing
 app.delete("/leave/:id", leaveGroup);
+app.post("/message", attachmentsMulter, sendAttachments);
 
 //left
 

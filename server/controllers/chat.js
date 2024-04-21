@@ -3,9 +3,11 @@ import { ErrorHandler } from "../utils/utility.js";
 import { Chat } from "../models/chat.js";
 import { emitEvent } from "../utils/features.js";
 // import newGroupChat from 
-import { ALERT, REFETCH_CHATS } from "../constants/events.js";
+import { ALERT, NEW_ATTACHMENT, NEW_MESSAGE_ALERT, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { User } from "../models/user.js";
+import { Message } from "../models/message.js";
+
 const newGroupChat = TryCatch(async(req,res,next) => {
     const {name, members} = req.body;
 
@@ -215,4 +217,56 @@ const leaveGroup = TryCatch(async (req,res,next) => {
     });
 
 });
-export {newGroupChat, getMyChats, getMyGroups, addMembers, removeMember, leaveGroup};
+
+const sendAttachments = TryCatch( async (req, res, next) =>{
+    const { chatId } = req.body;
+    const [chat, me] = await Promise.all([
+        Chat.findById(chatId),
+        User.findById(req.user," name ")]);
+
+    console.log(chatId,me);
+
+    if(!chat)
+        return next(new ErrorHandler(404,"Chat not found"));
+    
+    //console.log(chat);
+    const files = req.files || [];
+    if(files.length < 1)
+        return next(new ErrorHandler(400, "Please provide some attachments"));
+
+    //upload files here
+    const attachments = [];
+    const messageForDB = {content: "",
+    attachments,
+    sender: me._id, 
+    chat: chatId};
+
+    const messageForRealTime = {
+        ...messageForDB,
+        sender:{
+            _id: me._id,
+            name: me.name,
+            // avatar: me.avatar.url,
+        },
+    };
+    const message = await Message.create(messageForDB);
+    emitEvent(req, NEW_ATTACHMENT,
+    chat.members,{
+        message: messageForRealTime,
+        chatId,
+    });
+
+    emitEvent(req, NEW_MESSAGE_ALERT, chat.members,{
+        chatId,
+    });
+    
+    return res.status(200).json({
+        success: true,
+        message,
+    });
+});
+
+
+
+export {newGroupChat, getMyChats, getMyGroups, 
+    addMembers, removeMember, leaveGroup, sendAttachments};

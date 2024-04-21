@@ -1,20 +1,22 @@
 import mongoose from "mongoose";
-const { Schema, model, models } = "mongoose";
+const { Schema, model,Types, models } = mongoose;
 
 const schema = new Schema({
     
     content: String,
 
-    attachments:{
-        public_id:{
-            type: String,
-            required: true, 
-        },
-        url: {
-            type: String,
-            required: true,
-        },
-    },
+    attachments:[
+        {
+            public_id:{
+                type: String,
+                required: true, 
+            },
+            url: {
+                type: String,
+                required: true,
+            },
+        }
+    ],
     sender: {
         type: Types.ObjectId,
         ref: "User",
@@ -32,4 +34,4 @@ const schema = new Schema({
 },{ timestamps: true,}
 );
 
-export const Message = models.Message || models("Message", schema);
+export const Message = models.Message || model("Message", schema);
