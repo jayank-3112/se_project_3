@@ -3,13 +3,15 @@ import { login, newUser,getMyProfile, logout , searchUser} from "../controllers/
 import { singleAvatar } from "../middlewares/multer.js";
 import { errorMiddleware } from "../middlewares/error.js";
 import { isAuthenticated } from "../middlewares/auth.js";
+import { loginValidator, registerValidator, validateHandler } from "../lib/validators.js";
 
 
 const app = express.Router();
 
 //http://localhost:3000/user/login
-app.post('/new', singleAvatar, newUser);
-app.post('/login', login)
+app.post('/new',singleAvatar, registerValidator(),
+validateHandler, newUser);
+app.post('/login', loginValidator(), validateHandler, login)
 
 
 // after here user must be logged in to access the route

@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import userRoute from './routes/user.js';
 import chatRoute from './routes/chat.js';
 import { createUser } from "./seeders/user.js";
+import { createSingleChats,createGroupChats, createMessages, createMessagesInAChat, } from "./seeders/chat.js";
 
 dotenv.config({
     path:"./.env",
@@ -22,7 +23,9 @@ connectDB(mongoURI);
 
 //fake data to create 10 users
 //createUser(10);
-
+//createSingleChats(10);
+//createGroupChats(10);
+//createMessagesInAChat("6624f2b5fb527e1d9fd37fda",50);
 const app = express();
 
 // using middlewares to get the req.body
