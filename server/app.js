@@ -1,11 +1,14 @@
 import express from "express";
-import userRoute from './routes/user.js';
 import { connect } from "mongoose";
 import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
+
+import userRoute from './routes/user.js';
+import chatRoute from './routes/chat.js';
+import { createUser } from "./seeders/user.js";
 
 dotenv.config({
     path:"./.env",
@@ -16,6 +19,9 @@ dotenv.config({
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
 connectDB(mongoURI);
+
+//fake data to create 10 users
+//createUser(10);
 
 const app = express();
 
@@ -30,6 +36,7 @@ app.use(cookieParser());           // to access the cookies
 
 
 app.use('/user', userRoute);
+app.use('/chat', chatRoute);
 
 //home route 
 app.get("/",(req,res) => {

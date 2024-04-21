@@ -69,4 +69,20 @@ const logout = TryCatch( async (req,res) => {
     });
 }); 
 
-export { login, newUser, getMyProfile, logout };
+const searchUser = TryCatch( async (req,res) => {
+    //query to search the user
+    //those users which are not in my connect
+    const {name} = req.query;
+
+
+
+    res.status(200)
+    .cookie("app-token","",{...cookieOptions, maxAge: 0}).json({
+        success: true,
+        message: name,
+    });
+}); 
+
+
+
+export { login, newUser, getMyProfile, logout, searchUser };

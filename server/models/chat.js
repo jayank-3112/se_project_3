@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-const { Schema, Types, model, models } = "mongoose";
+const { Schema, Types, model, models } = mongoose; // corrected import
+
+// import { User } from "./user.js";
 
 const schema = new Schema({
     name: {
@@ -14,11 +16,10 @@ const schema = new Schema({
         type: Types.ObjectId,
         ref: "User",
     },
-    members:[{
+    members: [{
         type: Types.ObjectId,
         ref: "User",
     }],
-},{ timestamps: true,}
-);
+}, { timestamps: true });
 
-export const Chat = models.Chat || models("Chat", schema);
+export const Chat = models.Chat || model("Chat", schema); // corrected models object

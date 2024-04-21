@@ -38,6 +38,12 @@ const sendToken =(res, user, code, message) => {
     });
 };
 
+
+
+const emitEvent = (req,event, users, data) => {
+    console.log("emitting event",event);
+
+}
 //sendToken("response",{_id:"karun"},201,"User Created Successfully")
 
-export { connectDB, sendToken, cookieOptions };
+export { connectDB, sendToken, cookieOptions, emitEvent };
