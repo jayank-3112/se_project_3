@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-const { Schema, model, models } = "mongoose";
+const { Schema, model, Types, models } = mongoose;
 
 const schema = new Schema({
     
     status:{
-        Type: String,
+        type: String,
         default: "pending",
         enum:["pending", "accepted", "rejected"],
     },
@@ -21,4 +21,4 @@ const schema = new Schema({
 },{ timestamps: true,}
 );
 
-export const Request = models.Request || models("Request", schema);
+export const Request = models.Request || model("Request", schema);
